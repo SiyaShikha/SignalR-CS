@@ -1,9 +1,14 @@
 // create connection
-var connectionUserCount = new signalR.HubConnectionBuilder().withUrl("/hubs/userCount").build();
+const connectionUserCount = new signalR.HubConnectionBuilder().configureLogging(signalR.LogLevel.Trace).withUrl("/hubs/userCount", { transport: signalR.HttpTransportType.WebSockets }).build();
 
 // connect to methods that hub invokes (receive notifications from hub)
 connectionUserCount.on("updateTotalViews", (value) =>{
-    var newCountSpan = document.getElementById("totalViewsCounter");
+    const newCountSpan = document.getElementById("totalViewsCounter");
+    newCountSpan.textContent = value.toString();
+});
+
+connectionUserCount.on("updateTotalUsers", (value) =>{
+    const newCountSpan = document.getElementById("totalUsersCounter");
     newCountSpan.textContent = value.toString();
 });
 
